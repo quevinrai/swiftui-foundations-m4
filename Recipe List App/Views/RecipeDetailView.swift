@@ -59,5 +59,6 @@ struct RecipeDetailView_Previews: PreviewProvider {
         let model = RecipeModel()
         
         RecipeDetailView(recipe: model.recipes[0])
+            .environmentObject(RecipeModel())
     }
 }

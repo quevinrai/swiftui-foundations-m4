@@ -8,9 +8,13 @@
 import SwiftUI
 
 struct RecipeTabView: View {
+    @EnvironmentObject var model: RecipeModel
+    
     var body: some View {
+        
         TabView {
-            Text("Featured View")
+            
+            RecipeFeaturedView()
                 .tabItem {
                     VStack {
                         Image(systemName: "star.fill")
@@ -29,8 +33,9 @@ struct RecipeTabView: View {
     }
 }
 
-struct RecipeTabView_Previews: PreviewProvider {
+struct RecipeTabView_Previews: PreviewProvider {    
     static var previews: some View {
         RecipeTabView()
+            .environmentObject(RecipeModel())
     }
 }
