@@ -11,9 +11,9 @@ struct RecipeFeaturedView: View {
     // @ObservedObject var model = RecipeModel()
     @EnvironmentObject var model: RecipeModel
     @State var isDetailViewShowing = false
+    @State var tabSelectionIndex = 0
     
     var body: some View {
-        
         VStack(alignment: .leading, spacing: 0) {
             Text("Featured Recipes")
                 .padding(.leading)
@@ -22,7 +22,7 @@ struct RecipeFeaturedView: View {
                 .fontWeight(.bold)
             
             GeometryReader { geo in
-                TabView {
+                TabView(selection: $tabSelectionIndex) {
                     
                     // Loop through each recipe
                     ForEach(0..<model.recipes.count, id: \.self) { index in
@@ -50,6 +50,7 @@ struct RecipeFeaturedView: View {
                                     }
                                 }
                             })
+                            .tag(index)
                             .sheet(isPresented: $isDetailViewShowing) {
                                 // Show the Recipe Detail View
                                 RecipeDetailView(recipe: model.recipes[index])
@@ -72,13 +73,25 @@ struct RecipeFeaturedView: View {
             VStack(alignment: .leading, spacing: 10) {
                 Text("Preparation Time:")
                     .font(.headline)
-                Text("1 Hour")
+                Text(model.recipes[tabSelectionIndex].prepTime)
                 Text("Highlights")
                     .font(.headline)
-                Text("Healthy, Hearty")
+                RecipeHighlights(highlights: model.recipes[tabSelectionIndex].highlights)
             }
             .padding([.leading, .bottom])
         }
+        .onAppear(perform: {
+            setFeaturedIndex()
+        })
+    }
+    
+    func setFeaturedIndex() {
+        // Find the index of first recipe that is featured
+        let index = model.recipes.firstIndex { (recipe) -> Bool in
+            return recipe.featured
+        }
+        
+        tabSelectionIndex = index ?? 0
     }
 }
 
